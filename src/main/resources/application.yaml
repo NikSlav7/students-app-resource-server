@@ -1,0 +1,15 @@
+server:
+  port: 21212
+spring:
+  datasource:
+    password: Kolbasa1289
+    url: jdbc:postgresql://localhost:5432/students
+    username: nikslav
+  main:
+    allow-bean-definition-overriding: true
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+authserver:
+  domain: localhost:31212

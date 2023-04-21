@@ -21,10 +21,12 @@ public class Period {
     private String periodId;
     private String periodName;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Year year;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "period")
     private List<Subject> subjectList;
 
+    @OneToOne(mappedBy = "period", cascade = CascadeType.ALL)
+    private AbsenceStats absenceStats;
 }

@@ -21,12 +21,14 @@ public class Upload {
     @Id
     private String uploadId;
 
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date uploadDate;
 
 
     @OneToMany(mappedBy = "upload", cascade = CascadeType.ALL)
     private List<Mark> markList;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Profile profile;
 }

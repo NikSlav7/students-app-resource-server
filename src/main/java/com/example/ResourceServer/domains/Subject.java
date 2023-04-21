@@ -23,7 +23,7 @@ public class Subject {
 
     private String subjectName;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Period period;
 
 

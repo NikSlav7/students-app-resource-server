@@ -22,6 +22,6 @@ public class Year {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "year")
     private List<Period> periodList;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Profile profile;
 }

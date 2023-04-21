@@ -1,7 +1,9 @@
 package com.example.ResourceServer.dao;
 
 import com.example.ResourceServer.domains.Period;
+import com.example.ResourceServer.domains.Profile;
 import com.example.ResourceServer.domains.Year;
+import com.example.ResourceServer.exceptions.WrongDataSentException;
 import com.example.ResourceServer.repositories.PeriodRepository;
 import org.springframework.stereotype.Repository;
 
@@ -28,4 +30,13 @@ public class PeriodsDao {
         period.setPeriodId(UUID.randomUUID().toString());
         return period;
     }
+
+
+    public Period getPeriod(String periodName, Year year) throws WrongDataSentException {
+        return periodRepository.getPeriodByYearAndPeriodName(year, periodName).orElseThrow(() -> new WrongDataSentException("There is no such period"));
+    }
+    public void deletePeriod(String periodName, Year year) throws WrongDataSentException {
+        periodRepository.delete(periodRepository.getPeriodByYearAndPeriodName(year, periodName).orElseThrow(()-> new WrongDataSentException("There is no such period")));
+    }
+
 }

@@ -1,8 +1,10 @@
 package com.example.ResourceServer.pdf;
 
+import com.example.ResourceServer.dao.AbsenceDAO;
 import com.example.ResourceServer.dao.PeriodsDao;
 import com.example.ResourceServer.dao.YearsDao;
 import com.example.ResourceServer.domains.*;
+import com.example.ResourceServer.dto.AbsenceStatsDTO;
 import com.example.ResourceServer.exceptions.WrongFileException;
 import com.example.ResourceServer.repositories.ProfilesRepository;
 import jakarta.transaction.Transactional;
@@ -22,10 +24,13 @@ public class MarksManager {
 
     private final ProfilesRepository profilesRepository;
 
-    public MarksManager(YearsDao yearsDao, PeriodsDao periodsDao, ProfilesRepository profilesRepository) {
+    private final AbsenceDAO absenceStatsDAO;
+
+    public MarksManager(YearsDao yearsDao, PeriodsDao periodsDao, ProfilesRepository profilesRepository, AbsenceDAO absenceStatsDAO) {
         this.yearsDao = yearsDao;
         this.periodsDao = periodsDao;
         this.profilesRepository = profilesRepository;
+        this.absenceStatsDAO = absenceStatsDAO;
     }
 
 
@@ -47,20 +52,20 @@ public class MarksManager {
     }
 
     @Transactional
-    public List<Subject> getAvg(String marksString, Profile profile, String yearName, String periodName){
+    public List<Subject> createAndSaveMarks(String marksString, AbsenceStats absenceStats, Profile profile, String yearName, String periodName){
         String lineSeparator = System.getProperty("line.separator");
 
         Year year = yearsDao.getByNameOrCreateYear(yearName, profile);
         Period period = periodsDao.getByNameOrCreatePeriod(periodName, year);
 
 
-        String[] subjects = marksString.split(lineSeparator);
+        String[] subjects = marksString.split(lineSeparator + "|\n");
         List<Subject> markList = new ArrayList<>();
-
         Upload upload = new Upload();
         upload.setUploadId(UUID.randomUUID().toString());
         upload.setUploadDate(new Date());
         upload.setMarkList(new ArrayList<>());
+
 
         for (String subject : subjects){
             if (subject.isBlank()) continue;
@@ -111,11 +116,12 @@ public class MarksManager {
                 saved.getMarkList().add(subject.getMarkList().get(0));
             }
         }
+        period.setAbsenceStats(absenceStats);
         year.getPeriodList().add(period);
         year.setProfile(profile);
-
         period.setYear(year);
         profile.getYearList().add(year);
+        absenceStats.setPeriod(period);
         profilesRepository.save(profile);
 
         return markList;

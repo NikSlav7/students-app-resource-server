@@ -26,10 +26,11 @@ public class TokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader("Authorization");
-        if (token == null || token.trim().isBlank()){
+        if (token == null || !token.startsWith("Bearer ") || token.trim().isBlank()){
             filterChain.doFilter(request, response);
             return;
         }
+        token = token.replace("Bearer ", "");
 
         try {
             String id = authManager.checkToken(token);

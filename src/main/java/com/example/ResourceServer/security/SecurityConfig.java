@@ -27,7 +27,7 @@ public class SecurityConfig {
     @DependsOn("authManager")
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.addFilterAfter(new TokenFilter(authManager), BasicAuthenticationFilter.class).addFilterBefore(new CorsFilter(), TokenFilter.class).authorizeHttpRequests()
-                .requestMatchers("/api/auth/**")
+                .requestMatchers("/api/auth/**", "/api/password-reset/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

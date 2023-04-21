@@ -6,11 +6,18 @@ import com.example.ResourceServer.domains.Profile;
 import com.example.ResourceServer.dto.RegistrationDTO;
 import com.example.ResourceServer.dto.TokenDTO;
 import com.example.ResourceServer.dto.UsernamePasswordRegistrationDTO;
+import com.example.ResourceServer.exceptions.AuthServerError;
 import com.example.ResourceServer.exceptions.BadTokenException;
 import com.example.ResourceServer.exceptions.CredentialsInUseException;
+import com.example.ResourceServer.exceptions.WrongDataSentException;
+import com.example.ResourceServer.request.PasswordResetRequestAuthServer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +28,7 @@ import javax.net.ssl.SSLEngineResult;
 import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -39,12 +47,34 @@ public class AuthManager {
         this.profilesDao = profilesDao;
     }
 
+    private Logger logger = LogManager.getLogger();
+
     @PostMapping("/register")
     public ResponseEntity<Profile> register(@RequestBody RegistrationDTO registrationDTO) throws IOException, CredentialsInUseException {
         Profile profile = new Profile(registrationDTO);
         if(!profilesDao.canAddProfile(profile)) throw new CredentialsInUseException("Credentials already used");
         profile.setProfileId(registerProfile(registrationDTO));
         return ResponseEntity.ok(profilesDao.saveProfile(profile));
+    }
+
+    public void resetPassword(Profile profile, String newPassword) throws IOException, InternalError, AuthServerError {
+        URL url = new URL("http://" + authServer + "/api/auth/change-password");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type","application/json");
+        connection.setDoOutput(true);
+        String data = new ObjectMapper().writeValueAsString(new PasswordResetRequestAuthServer(profile.getUsername(), newPassword));
+        try(OutputStream outputStream = connection.getOutputStream()){
+            byte[] sendData = data.getBytes(StandardCharsets.UTF_8);
+            outputStream.write(sendData, 0, sendData.length);
+            if (connection.getResponseCode() != 200) throw new AuthServerError("Some error with auth server");
+        } catch (Exception exception){
+            logger.error(exception.getMessage());
+            throw new AuthServerError("Some error with auth server");
+        }
+
+
+
     }
 
     public String checkToken(String accessToken) throws IOException, BadTokenException {

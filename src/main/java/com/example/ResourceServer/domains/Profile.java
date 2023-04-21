@@ -1,10 +1,7 @@
 package com.example.ResourceServer.domains;
 
 import com.example.ResourceServer.dto.RegistrationDTO;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +27,11 @@ public class Profile {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
     private List<Upload> uploadList;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
+    private List<PasswordResetToken> passwordResetTokenList;
+
+
 
 
     public Profile(RegistrationDTO registrationDTO){

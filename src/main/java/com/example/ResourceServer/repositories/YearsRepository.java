@@ -5,9 +5,14 @@ import com.example.ResourceServer.domains.Year;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public interface YearsRepository extends JpaRepository<Year, String> {
     Optional<Year> getYearByYearNameAndProfile(String yearName, Profile profile);
+
+    List<Year> getYearsByProfile(Profile profile);
+
+    void removeYearByYearNameAndProfile(String yearName, Profile profile);
+
 }

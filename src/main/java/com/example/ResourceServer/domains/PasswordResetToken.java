@@ -6,27 +6,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.relational.core.mapping.Table;
-import java.util.*;
+
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Table("subjects")
 @Entity
-@AllArgsConstructor
+@Table
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-public class Subject {
+public class PasswordResetToken {
 
     @Id
-    private String subjectId;
-
-    private String subjectName;
-
+    private String token;
+    private LocalDateTime expiresAt;
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private Period period;
-
-
-    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
-    private List<Mark> markList;
+    private Profile profile;
 }

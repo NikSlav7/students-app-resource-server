@@ -11,5 +11,19 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: true
+  mail:
+    host: smtp.zoho.eu
+    port: 465
+    username: nikslav07@zohomail.eu
+    password: Kolbasa1289
+    protocol: smtp
+    properties:
+        mail:
+          smtp:
+            auth: true
+            starttls:
+              enable: true
 authserver:
   domain: localhost:31212
+frontend:
+  domain: http://localhost:3000

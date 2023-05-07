@@ -34,6 +34,8 @@ public class Profile {
 
 
 
+
+
     public Profile(RegistrationDTO registrationDTO){
         this.email = registrationDTO.getEmail();
         this.username = registrationDTO.getUsername();

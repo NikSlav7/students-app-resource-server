@@ -6,11 +6,13 @@ import com.example.ResourceServer.dao.ProfilesDao;
 import com.example.ResourceServer.domains.PasswordResetToken;
 import com.example.ResourceServer.domains.Profile;
 import com.example.ResourceServer.exceptions.AuthServerError;
+import com.example.ResourceServer.exceptions.UserNotFoundException;
 import com.example.ResourceServer.request.PasswordResetRequest;
 import com.example.ResourceServer.request.RequirePasswordResetRequest;
 import com.example.ResourceServer.exceptions.NoSuchEntityException;
 import com.example.ResourceServer.exceptions.WrongDataSentException;
 import com.example.ResourceServer.mail.PasswordResetMailSender;
+import com.example.ResourceServer.request.ValidateTokenRequest;
 import com.example.ResourceServer.security.AuthManager;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
@@ -53,8 +55,15 @@ public class ResetPasswordService {
     public ResponseEntity resetPassword(@RequestBody PasswordResetRequest resetRequest) throws NoSuchEntityException, WrongDataSentException, IOException, AuthServerError {
         validateResetRequest(resetRequest);
         Profile profile = passwordResetTokenDAO.getProfileByToken(resetRequest.getToken());
-        authManager.resetPassword(profile, resetRequest.getPassword());
-        return (ResponseEntity) ResponseEntity.ok();
+        authManager.resetPassword(profile, resetRequest.getPassword(), resetRequest.getToken());
+        return ResponseEntity.ok(true);
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity validateToken(@RequestBody ValidateTokenRequest validateTokenRequest) throws NoSuchEntityException, UserNotFoundException {
+        if (!profilesDao.getProfileById(passwordResetTokenDAO.getProfileByToken(validateTokenRequest.getToken()).getProfileId()).getUsername().equals(validateTokenRequest.getUsername())
+                || !passwordResetTokenDAO.isValid(validateTokenRequest.getToken())) return ResponseEntity.badRequest().build();
+        else return ResponseEntity.ok(true);
     }
 
     private void validateResetRequest(PasswordResetRequest resetRequest) throws NoSuchEntityException, WrongDataSentException {

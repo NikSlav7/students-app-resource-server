@@ -18,4 +18,8 @@ public class PasswordResetRequestAuthServer {
 
     @JsonProperty("newPassword")
     String newPassword;
+
+
+    @JsonProperty("token")
+    String token;
 }

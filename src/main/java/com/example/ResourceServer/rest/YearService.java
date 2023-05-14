@@ -5,6 +5,7 @@ import com.example.ResourceServer.dao.YearsDao;
 import com.example.ResourceServer.domains.Profile;
 import com.example.ResourceServer.domains.SubjectWithIntList;
 import com.example.ResourceServer.dto.YearDTO;
+import com.example.ResourceServer.exceptions.EntityExistsException;
 import com.example.ResourceServer.exceptions.UserNotFoundException;
 import com.example.ResourceServer.exceptions.WrongDataSentException;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +39,12 @@ public class YearService {
     }
 
     @PostMapping("/create-new-year")
-    public ResponseEntity createNewYear(@RequestBody @Validated YearDTO yearDTO) throws UserNotFoundException {
+    public ResponseEntity createNewYear(@RequestBody @Validated YearDTO yearDTO) throws UserNotFoundException, EntityExistsException {
+
         String profileId = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         Profile profile = profilesDao.getProfileById(profileId);
+
+        yearsDao.checkIfYearNameAlreadyExists(yearDTO.getName(), profile);
         yearsDao.createNewYear(yearDTO.getName(), profile);
         return ResponseEntity.ok(true);
     }

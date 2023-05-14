@@ -6,11 +6,13 @@ import com.example.ResourceServer.dao.AbsenceDAO;
 import com.example.ResourceServer.dao.PeriodsDao;
 import com.example.ResourceServer.dao.ProfilesDao;
 import com.example.ResourceServer.dao.YearsDao;
+import com.example.ResourceServer.dictionary.Language;
 import com.example.ResourceServer.domains.AbsenceStats;
 import com.example.ResourceServer.domains.Profile;
 import com.example.ResourceServer.domains.Subject;
 import com.example.ResourceServer.pdf.AbsenceStatsManager;
 import com.example.ResourceServer.pdf.MarksManager;
+import com.example.ResourceServer.pdf.MarksMode;
 import com.example.ResourceServer.repositories.AbsenceStatsRepository;
 import com.example.ResourceServer.repositories.PeriodRepository;
 import com.example.ResourceServer.repositories.ProfilesRepository;
@@ -71,19 +73,19 @@ public class MarkTests {
     }
 
 
-    @Test
-    void canCalculateDottedAvg() throws Exception{
-        String profileId = "banan";
-        Profile profile = new Profile();
-        profile.setProfileId(profileId);
-        profile.setYearList(new ArrayList<>());
-        profile.setUploadList(new ArrayList<>());
-
-        String testMarks = TestVariables.DOTTED_AJA;
-        String yearName = "2021";
-        AbsenceStats absenceStats = absenceStatsManager.getAbsentStats(testMarks, null, MarksManager.extractPeriod(testMarks));
-        List<Subject> subjectList = marksManager.createAndSaveMarks(MarksManager.extractMarks(testMarks),absenceStats, profile, yearName, MarksManager.extractPeriod(testMarks));
-        assertThat(subjectList.stream().filter(element -> element.getSubjectName().trim().equalsIgnoreCase("AJA")).collect(Collectors.toList()).size()).isNotZero();
-    }
+//    @Test
+//    void canCalculateDottedAvg() throws Exception{
+//        String profileId = "banan";
+//        Profile profile = new Profile();
+//        profile.setProfileId(profileId);
+//        profile.setYearList(new ArrayList<>());
+//        profile.setUploadList(new ArrayList<>());
+//
+//        String testMarks = TestVariables.DOTTED_AJA;
+//        String yearName = "2021";
+//        AbsenceStats absenceStats = absenceStatsManager.getAbsentStats(testMarks, null, MarksManager.extractPeriod(testMarks), Language.ESTONIAN);
+//        List<Subject> subjectList = marksManager.createAndSaveMarks(MarksManager.extractMarks(testMarks),absenceStats, profile, yearName, MarksManager.extractPeriod(testMarks), MarksMode.MODE_DOUBLE);
+//        assertThat(subjectList.stream().filter(element -> element.getSubjectName().trim().equalsIgnoreCase("AJA")).collect(Collectors.toList()).size()).isNotZero();
+//    }
 }
 

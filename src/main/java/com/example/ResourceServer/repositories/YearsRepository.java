@@ -15,4 +15,6 @@ public interface YearsRepository extends JpaRepository<Year, String> {
 
     void removeYearByYearNameAndProfile(String yearName, Profile profile);
 
+    boolean existsByProfileAndYearName(Profile profile, String yearName);
+
 }

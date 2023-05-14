@@ -1,6 +1,7 @@
 package com.example.ResourceServer.dao;
 
 import com.example.ResourceServer.domains.*;
+import com.example.ResourceServer.exceptions.EntityExistsException;
 import com.example.ResourceServer.exceptions.WrongDataSentException;
 import com.example.ResourceServer.repositories.YearsRepository;
 import com.example.ResourceServer.rowMappers.SimplifiedYearRowMapper;
@@ -75,6 +76,10 @@ public class YearsDao {
     }
     private List<Year> getAllProfileYears(Profile profile){
         return yearsRepository.getYearsByProfile(profile);
+    }
+
+    public void checkIfYearNameAlreadyExists(String yearName, Profile profile) throws EntityExistsException {
+        if (yearsRepository.existsByProfileAndYearName(profile, yearName)) throw new EntityExistsException("There is already a year with such name");
     }
 
 

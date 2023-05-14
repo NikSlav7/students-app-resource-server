@@ -57,13 +57,13 @@ public class AuthManager {
         return ResponseEntity.ok(profilesDao.saveProfile(profile));
     }
 
-    public void resetPassword(Profile profile, String newPassword) throws IOException, InternalError, AuthServerError {
+    public void resetPassword(Profile profile, String newPassword, String token) throws IOException, InternalError, AuthServerError {
         URL url = new URL("http://" + authServer + "/api/auth/change-password");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type","application/json");
         connection.setDoOutput(true);
-        String data = new ObjectMapper().writeValueAsString(new PasswordResetRequestAuthServer(profile.getUsername(), newPassword));
+        String data = new ObjectMapper().writeValueAsString(new PasswordResetRequestAuthServer(profile.getUsername(), newPassword, token));
         try(OutputStream outputStream = connection.getOutputStream()){
             byte[] sendData = data.getBytes(StandardCharsets.UTF_8);
             outputStream.write(sendData, 0, sendData.length);

@@ -1,0 +1,28 @@
+server:
+  port: 21212
+spring:
+  datasource:
+    password: 1234
+    url: jdbc:postgresql://db:5432/students
+    username: nikslav
+  main:
+    allow-bean-definition-overriding: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  mail:
+    host: smtp.zoho.eu
+    port: 465
+    username: nikslav07@zohomail.eu
+    password: Kolbasa1289
+    protocol: smtp
+    properties:
+        mail:
+          smtp:
+            auth: true
+            starttls:
+              enable: true
+
+  profiles:
+    active=@activatedProperties@

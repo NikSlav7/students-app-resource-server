@@ -105,7 +105,9 @@ public class AuthManager {
 
 
     private String registerProfile(RegistrationDTO registrationDTO) throws IOException {
+        logger.info(authServer);
         URL url = new URL("http://" + authServer + "/api/auth/register");
+        logger.info(url.toString());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type","application/json");
@@ -115,7 +117,7 @@ public class AuthManager {
         try(OutputStream outputStream = connection.getOutputStream()){
             byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
             outputStream.write(bytes, 0, bytes.length);
-            System.out.println(connection.getResponseCode());
+            logger.info(connection.getResponseCode());
         } catch (Exception exception){
             exception.printStackTrace();
         }

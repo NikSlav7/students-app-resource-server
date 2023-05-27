@@ -2,14 +2,14 @@ server:
   port: 21212
 spring:
   datasource:
-    password: Kolbasa1289
-    url: jdbc:postgresql://localhost:5432/students
+    password: 1234
+    url: jdbc:postgresql://db:5432/students
     username: nikslav
   main:
     allow-bean-definition-overriding: true
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
   mail:
     host: smtp.zoho.eu
@@ -24,6 +24,6 @@ spring:
             starttls:
               enable: true
 authserver:
-  domain: localhost:31212
+  domain: 127.0.0.1:31212
 frontend:
-  domain: http://localhost:3000
+  domain: http://127.0.0.1:3000

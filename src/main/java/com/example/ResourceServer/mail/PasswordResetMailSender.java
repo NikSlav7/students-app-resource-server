@@ -49,6 +49,6 @@ public class PasswordResetMailSender {
     }
 
     private String getLink(String token){
-        return frontendDomain + "/password/reset?reset-password-token=" + token;
+        return "http://koolitrek.info/password/reset?reset-password-token=" + token;
     }
 }

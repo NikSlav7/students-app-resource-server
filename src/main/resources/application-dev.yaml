@@ -2,7 +2,7 @@ server:
   port: 21212
 spring:
   datasource:
-    password: 1234
+    password: ${SPRING_DATASOURCE_PASSWORD}
     url: jdbc:postgresql://db:5432/students
     username: nikslav
   main:
@@ -15,15 +15,16 @@ spring:
     host: smtp.zoho.eu
     port: 465
     username: nikslav07@zohomail.eu
-    password: Kolbasa1289
+    password: ${SPRING_MAIL_PASSWORD}
     protocol: smtp
     properties:
-        mail:
-          smtp:
-            auth: true
-            starttls:
-              enable: true
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 authserver:
-  domain: 127.0.0.1:31212
+  domain: auth-server:31212
 frontend:
-  domain: http://127.0.0.1:3000
+  domain: http://koolitrek.info
+

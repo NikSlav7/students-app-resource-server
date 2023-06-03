@@ -72,6 +72,7 @@ public class AuthManager {
             logger.error(exception.getMessage());
             throw new AuthServerError("Some error with auth server");
         }
+        logger.info(connection.getResponseCode());
 
 
 
